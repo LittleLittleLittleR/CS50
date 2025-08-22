@@ -1,0 +1,160 @@
+{% extends "Collab/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'Collab/style/folder.css' %}?v=1.0" rel="stylesheet">
+    <script defer src="{% static 'Collab/script/folder.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div id="notes-header">
+        <h1 id="notes-path">
+            <a href="{%url 'index' %}">Index</a>
+            {% if is_collab %}
+                / <a href="{% url 'collabs' %}">Collabs</a>
+            {% else %}
+                / <a href="{% url 'notes' %}">Personal</a>
+            {% endif %}
+            {% for folder in dir_path %}
+                / <a href="{% url 'folder_view' folder.id %}?is_collab={{ is_collab|yesno:'1,0' }}">{{ folder.subject }}</a>
+            {% endfor %}
+        </h1>
+        {% if not is_collab %}
+            <div class="action-buttons">
+                <form action="{% url 'add_folder' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent" value="{{ parent_folder.id|default_if_none:'' }}">
+                    <button type="submit" class="btn">+ Folder</button>
+                </form>
+
+                <form action="{% url 'add_note' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="folder" value="{{ parent_folder.id|default_if_none:'' }}">
+                    <button type="submit" class="btn">+ Note</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+    <div class="folders">
+        {% for folder in folders %}
+            <div class="folder">
+                <h3><a href="{% url 'folder_view' folder.id %}?is_collab={{ is_collab|yesno:'1,0' }}">{{ folder.subject }}</a></h3>
+
+                <p>{{ folder.updated_at|date:"M d, Y" }}</p>
+                
+                {% if not is_collab %}
+                    <div class="action-buttons">
+                        <button onclick="toggleRename('folder', '{{ folder.id }}', '{{ folder.subject }}')">Rename</button>
+                        <button onclick="toggleShare('folder', '{{ folder.id }}', '{{ folder.subject }}')">Share</button>
+                        <button onclick="toggleDelete('folder', '{{folder.id}}', '{{folder.subject}}')">Delete</button>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <hr>
+    
+    <div class="notes">
+        {% for note in notes %}
+            <div class="note">
+                <h3><a href="{% url 'note_view' note.id %}?is_collab={{ is_collab|yesno:'1,0' }}">{{ note.title }}</a></h3>
+                <p>{{ note.content|truncatewords:20 }}</p>
+                <p>{{ note.updated_at|date:"M d, Y" }}</p>
+
+                {% if not is_collab %}
+                    <div class="action-buttons">
+                        <button onclick="toggleRename('note', '{{ note.id }}', '{{ note.title }}')">Rename</button>
+                        <button onclick="toggleShare('note', '{{ note.id }}', '{{ note.title }}')">Share</button>
+                        <button onclick="toggleDelete('note', '{{note.id}}', '{{note.title}}')">Delete</button>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if not is_collab %}
+        <div id="rename-folder-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form id="rename-folder-form" onsubmit="renameFolder(event)">
+                    <p id="rename-folder-text" class="modal-text"></p>
+                    <input type="hidden" name="folder_id" id="rename-folder-id" class="modal-input" value="">
+                    <input type="text" name="new_subject" id="new-subject" class="modal-input" placeholder="New folder name" required>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Rename</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="rename-note-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form id="rename-note-form" onsubmit="renameNote(event)">
+                    <p id="rename-note-text" class="modal-text"></p>
+                    <input type="hidden" id="rename-note-id" class="modal-input" value="">
+                    <input type="text" name="new_title" id="new-title" class="modal-input" placeholder="New note title" required>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Rename</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="delete-folder-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form onsubmit="deleteFolder(event)">
+                    <p id="delete-folder-text" class="modal-text"></p>
+                    <input type="hidden" name="folder_id" id="delete-folder-id" class="modal-input" value="">
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="delete-note-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form onsubmit="deleteNote(event)">
+                    <p id="delete-note-text" class="modal-text"></p>
+                    <input type="hidden" id="delete-note-id" class="modal-input" value="">
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="share-folder-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form id="share-folder-form" onsubmit="shareFolder(event)">
+                    <p id="share-folder-text" class="modal-text"></p>
+                    <input type="hidden" name="folder_id" id="share-folder-id" class="modal-input" value="">
+                    <input type="text" name="useremail" id="share-folder-useremail" class="modal-input" placeholder="Enter email" required>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Share Folder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="share-note-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form id="share-note-form" onsubmit="shareNote(event)">
+                    <p id="share-note-text" class="modal-text"></p>
+                    <input type="hidden" id="share-note-id" class="modal-input" value="">
+                    <input type="text" id="share-note-useremail" class="modal-input" placeholder="Enter email" required>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Share Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

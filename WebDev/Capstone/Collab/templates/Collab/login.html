@@ -1,0 +1,40 @@
+{% extends "Collab/layout.html" %}
+
+{% load static %}
+
+{% block title %}Collab - Login{% endblock %}
+
+{% block head %}
+    <link href="{% static 'Collab/style/login.css' %}" rel="stylesheet">
+    <script src="{% static 'Collab/script/login.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+    <div class="form-container">
+        <div class="toggle-buttons">
+            <button id="loginBtn" class="active">Login</button>
+            <button id="registerBtn">Register</button>
+        </div>
+
+        <form id="loginForm" class="active" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+
+        <form id="registerForm" action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <input type="password" name="confirmation" placeholder="Password" required />
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+{% endblock %}

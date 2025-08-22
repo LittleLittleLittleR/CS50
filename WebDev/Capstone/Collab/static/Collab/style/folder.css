@@ -1,0 +1,54 @@
+#notes-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#notes-path {
+    font-size: 1.5rem;
+}
+
+#notes-header a {
+    text-decoration: none;
+    color: #333;
+}
+
+#notes-header a:hover {
+    text-decoration: underline;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.folders, .notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.folder, .note {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 15vh;
+    width: 15vw;
+    overflow: hidden;
+}
+
+.note {
+    height: 40vh;
+}
+
+.folder h3, .note h3 {  
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+

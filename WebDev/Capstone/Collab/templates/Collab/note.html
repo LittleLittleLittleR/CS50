@@ -1,0 +1,81 @@
+{% extends "Collab/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'Collab/style/note.css' %}?v=1.0" rel="stylesheet">
+    <script defer src="{% static 'Collab/script/note.js' %}"></script>
+    <script defer src="{% static 'Collab/script/folder.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div id="note-header">
+        {% if not is_collab %}
+            <div id="note-actions">
+                <button id="toggle-edit" class="btn">View Mode</button>
+                <button onclick="toggleShare('note', '{{ note.id }}', '{{ note.title }}')" class="btn">Share</button>
+                <button onclick="toggleDelete('note', '{{ note.id }}', '{{ note.title }}')" class="btn">Delete</button>
+            </div>
+        {% endif %}
+
+        <input id="note-title" name="title" value="{{ note.title }}">
+
+        {% if folder %}
+            <a href="{% url 'folder_view' folder.id %}?is_collab={{ is_collab|yesno:'1,0' }}" class="btn">Back to {{ folder.subject }}</a>
+        {% elif is_collab %}
+            <a href="{% url 'collabs' %}" class="btn">Back to Collabs</a>
+        {% else %}
+            <a href="{% url 'notes' %}" class="btn">Back to Personal</a>
+        {% endif %}
+    </div>
+
+    <div id="note-status">
+        <p>Last updated: <span id="updated-at"> {{ note.updated_at }}</span> <b>|</b> <span id="save-status">All changes saved</span></p>
+    </div>
+    
+    <div id="note-content">
+        <textarea id="content-textarea" placeholder="Type something..." autofocus>{{ note.content }}</textarea>
+    </div>
+
+    {% if not is_collab %}
+        <div id="delete-note-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form onsubmit="deleteNote(event)">
+                    <p id="delete-note-text" class="modal-text"></p>
+                    <input type="hidden" id="delete-note-id" class="modal-input" value="">
+                    {% if note.folder %}
+                        <input type="hidden" id="note-folder-id" class="modal-input" value="{{ note.folder.id }}">
+                    {% endif %}
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="share-note-overlay" class="modal-overlay" style="display: none;">
+            <div class="modal">
+                <form id="share-note-form" method="POST" action="{% url 'share_note' note.id %}">
+                    {% csrf_token %}
+                    <p id="share-note-text" class="modal-text"></p>
+                    <input type="hidden" id="share-note-id" class="modal-input" value="{{ note.id }}">
+                    <input type="text" class="modal-input" placeholder="Enter user email" required>
+                    <div class="modal-actions">
+                        <button type="button" onclick="closeOverlay()">Cancel</button>
+                        <button type="submit">Share Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+        <div class="note-actions">
+            <button id="toggle-edit" class="btn">View Mode</button>
+        </div>
+    {% endif %}
+
+
+    <script>
+        const noteId = "{{ note.id }}";
+    </script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "Collab/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'Collab/style/index.css' %}?v=1.0" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div id="index-body">
+        <div class="index-folder" id="personal-folder">
+            <a href="{% url 'notes' %}" class="page-header">Personal</a>
+            {% for note in personal_notes %}
+                <div class="note">
+                    <div class="note-header">
+                        <h3><a href="{% url 'note_view' note.id %}?is_collab=0">{{ note.title }}</a></h3>
+                        <p>{{ note.updated_at|date:"M d, Y" }}</p>
+                    </div>
+                    <p>{{ note.content|truncatewords:20 }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="index-folder">
+            <a href="{% url 'collabs' %}" class="page-header">Collabs</a>
+            {% for note in collab_notes %}
+                <div class="note">
+                    <div class="note-header">
+                        <h3><a href="{% url 'note_view' note.id %}?is_collab=1">{{ note.title }}</a></h3>
+                        <p>{{ note.updated_at|date:"M d, Y" }}</p>
+                    </div>
+                    <p>{{ note.content|truncatewords:20 }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
