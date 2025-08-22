@@ -1,0 +1,38 @@
+#posts-div {
+    width: 50vw;
+    margin: auto;
+    position: relative;
+}
+
+.post-div {
+    width: 100%;
+    margin-top: 5vh;
+    padding: 2vh 2vw;
+    border: solid black 1px;
+}
+
+.post-header-div, .post-content-div, .post-like-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.edit-post-button, .confirm-post-button, .like-post-button {
+    height: 5vh;
+    width: 15%;
+}
+
+.post-content, .content-textarea {
+    width: 85%;
+    resize: none;
+}
+
+.content-textarea {
+    height: 15vh;
+}
+
+#pagination-nav {
+    position: absolute;
+    right: 0;
+    margin-top: 5vh;
+}

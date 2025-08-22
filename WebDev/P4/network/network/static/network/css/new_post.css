@@ -1,0 +1,9 @@
+#create-post-div {
+    width: 50vw;
+    margin: auto;
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+}

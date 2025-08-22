@@ -1,0 +1,13 @@
+#profile-top-div {
+    width: 50vw;
+    margin: auto;
+}
+
+#profile-header-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+

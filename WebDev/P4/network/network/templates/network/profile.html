@@ -1,0 +1,82 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <link href="{% static 'network/css/profile.css' %}" rel="stylesheet">
+    <script src="{% static 'network/js/profile.js' %}"></script>
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+    <div id="profile-top-div">
+        <input type="hidden" id="profile-user-id" value="{{ profile_user.id }}">
+
+        <div id="profile-header-div">
+            <h3>{{ profile_user.username }}</h3>
+            {% if user.is_authenticated %}
+                {% if is_following != None %}
+                    {% if is_following %}
+                        <button id="follow-unfollow-button" onclick="toggleFollow('{{ profile_user.id }}')">Unfollow</button>
+                    {% else %}
+                        <button id="follow-unfollow-button" onclick="toggleFollow('{{ profile_user.id }}')">Follow</button>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+        <div id="followers-following-div">
+            followers: <span id="followers-count">{{ followers_count }}</span>
+            following: <span id="following-count">{{ following_count }}</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div id="posts-div">
+        {% for post in post_page %}
+        <div class="post-div">
+            <input type="hidden" class="post-id" value="{{ post.id }}">
+            <div class="post-header-div">
+                <h5 class="post-user"><a href="{% url 'profile' post.user.id %}">@{{ post.user.username }}</a></h5>
+                <div class="post-datetime">{{ post.datetime }}</div>
+            </div>
+            <div class="post-content-div">
+                <p class="post-content">{{ post.content }}</p>
+                {% if user.id == post.user.id %}
+                    <button class="edit-post-button" onclick="edit_post(this)">edit</button>
+                {% endif %}
+            </div>
+            <div class="post-like-div">
+                <p class="post-likes">❤️ <span class="likes-count">{{ post.likes_count }}</span></p>
+                <button class="like-post-button" onclick="like_post(this)">like</button>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if post_page %}
+            <nav aria-label="Page navigation example" id="pagination-nav">
+                <ul class="pagination">
+                    {% if page_no != 1 %}
+                        <li class="page-item">
+                            <a class="page-link" data-page="{{ page_no|add:-1 }}" onclick="fetch_profile_page(this)">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% for num in page_list %}
+                        {% if num == page_no %}
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">{{ num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" data-page="{{ num }}" onclick="fetch_profile_page(this)">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_no != page_count %}
+                        <li class="page-item">
+                            <a class="page-link" data-page="{{ page_no|add:1 }}" onclick="fetch_profile_page(this)">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+
+{% endblock %}
