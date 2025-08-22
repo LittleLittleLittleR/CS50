@@ -1,0 +1,44 @@
+textarea {
+    min-height: 400px;
+}
+
+.email-id {
+    display: none;
+}
+
+.email-preview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    border: solid black;
+}
+
+.email-preview-unread {
+    background-color: white;
+}
+
+.email-preview-read {
+    background-color: #BBB;
+}
+
+.email-preview > p {
+    margin: 1vh 0 1vh 2vw;
+}
+
+.email-preview-sender {
+    font-weight: bold;
+}
+
+.email-preview-timestamp {
+    margin-left: auto;
+}
+
+#email-sender, #email-recipients {
+    font-weight: bold;
+}
+
+#email-body {
+    height: auto;
+}
+

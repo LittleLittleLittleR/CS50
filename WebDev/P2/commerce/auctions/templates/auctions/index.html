@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'auctions/index.css' %}?v=1.0" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <h2>{{ title }}</h2>
+    {% if listings %}
+        {% for listing in listings %}
+            <a href="{% url 'listing' listing.id %}">
+                <div class="listing_div">
+                    <div class="listing_img_div"><img class="listing_img" src="{{ listing.img_url }}" alt="{{ listing.title }} image"></div>
+                    <div class="listing_text_div">
+                        <h4>Listing: {{ listing.title }}</h4>
+                        
+                        <p>Description: {{ listing.description }}</p>
+
+                        <p>
+                            Current Price: 
+                            {% if listing.highest_bid %}
+                                ${{ listing.highest_bid|floatformat:2 }}
+                            {% else %}
+                                ${{ listing.starting_price|floatformat:2 }} (Starting Price)
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>No listings found.</p>
+    {% endif %}
+{% endblock %}

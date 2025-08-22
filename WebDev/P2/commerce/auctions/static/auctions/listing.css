@@ -1,0 +1,86 @@
+hr {
+    background-color: black;
+}
+
+#listing_title {
+    text-align: center;
+    margin: 5vh 0;
+}
+#content_div {
+    width: 80vw;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+}
+
+#img_div {
+    width: 25vw;
+}
+
+#listing_img {
+    width: 100%;
+    height: auto;
+}
+
+#right_div {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+#listing_text_div > p {
+    width: 25vw;
+    word-wrap: break-word;
+}
+
+#bid_error {
+    color: red;
+}
+
+#buttons_div {
+    display: flex;
+    flex-direction: row;
+}
+
+.listing_button {
+    width: 10vw;
+    height: auto;
+    min-height: 6vh;
+    margin-right: 3vw;
+    background-color: white;
+    border: solid black 1px;
+    border-radius: 10px;
+    transition: box-shadow 0.4s ease;
+}
+
+.listing_button:hover {
+    box-shadow: 5px 5px 20px grey;
+}
+
+#comment_section_div {
+    width: 80vw;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
+
+.comment_div {
+    width: 100%;
+    height: auto;
+    min-height: 6vh;
+    border: solid black 1px;
+    border-radius: 20px;
+    margin: 2vh 0;
+    padding: 1vh 1vw;
+    display: flex;
+    flex-direction: row;
+}
+
+.comment_username {
+    font-weight: bold;
+    margin-right: 1vw;
+}
+
+.comment_comment {
+    font-style: italic;
+}

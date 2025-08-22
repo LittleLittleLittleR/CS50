@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+}
+#links {
+    height: 10vh;
+    width: 94vw;
+    margin: 5vh 3vw;
+    text-align: right;
+}
+#search {
+    height: 50vh;
+    width: 80vw;
+    margin: 10vh 10vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#text_input {
+    width: 60vw;
+    height: 4vh;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 81.25%;
+    padding: 2vh;
+    background-color: #DDD;
+}
+input[type='submit'] {
+    width: auto;
+    padding: 0 1vw;
+    margin: 2vw;
+    height: 8vh;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 81.25%;
+}
+#submit_div {
+    display: block;
+    text-align: -webkit-center;
+    unicode-bidi: isolate;
+}

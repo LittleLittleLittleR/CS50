@@ -1,0 +1,39 @@
+.listing_div {
+    height: 40vh;
+    width: 80vw;
+    margin-bottom: 2vh;
+    display: flex;
+    border: solid black 1px;
+    border-radius: 20px;;
+    transition: box-shadow 0.4s ease;
+}
+.listing_div:hover {
+    box-shadow: 5px 5px 50px grey;
+}
+
+a, a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.listing_img_div {
+    width: 40vw;
+    display: flex;
+    margin: auto;
+}
+
+.listing_img {
+    height: auto;
+    width: auto;
+    max-height: 35vh;
+    max-width: 35vh;
+    margin: auto;
+}
+
+.listing_text_div {
+    width: 40vw;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+}
